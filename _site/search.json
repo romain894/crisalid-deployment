@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome to CRISalid Deployment Documentation",
+    "section": "",
+    "text": "CRISalid is a modular set of open-source components designed to support the development of an institutional Current Research Information System (CRIS).\nIt is built to be message-oriented, modular, and loosely coupled. Each component communicates with others through asynchronous messaging (via RabbitMQ), while also exposing classical REST or GraphQL APIs to allow service-oriented approaches."
+  },
+  {
+    "objectID": "index.html#development-test-deployment",
+    "href": "index.html#development-test-deployment",
+    "title": "Welcome to CRISalid Deployment Documentation",
+    "section": "🧪 Development & Test Deployment",
+    "text": "🧪 Development & Test Deployment\nUse this if you’re:\n\nWorking on a specific CRISalid module\nTesting integration locally\nEvaluating CRISalid for your institution\n\nWe provide:\n\nDocker Compose examples\nManual installation instructions (e.g., for deploying on virtual machines)\n\n→ Explore Development & Test Deployment"
+  },
+  {
+    "objectID": "index.html#production-deployment",
+    "href": "index.html#production-deployment",
+    "title": "Welcome to CRISalid Deployment Documentation",
+    "section": "🚀 Production Deployment",
+    "text": "🚀 Production Deployment\nFor institutional or production-grade deployments.\nWhile Kubernetes is the primary target, it is not required — you may still use Docker or manual setups if needed.\nWe provide:\n\nShell scripts to generate Kubernetes manifests\nManual installation instructions for production environments\n\n→ Explore Production Deployment"
+  }
+]

@@ -1,0 +1,113 @@
+---
+title: "Welcome to CRISalid Deployment Documentation"
+format:
+  html:
+    toc: true
+    toc-location: left
+---
+
+# ❔ What is CRISalid?
+
+**CRISalid** is a modular set of open-source components designed to support the development of an institutional
+**Current Research Information System (CRIS)**.
+
+It is built to be **message-oriented**, modular, and loosely coupled. Each component communicates with others through
+asynchronous messaging (via RabbitMQ), while also exposing classical **REST** or **GraphQL** APIs to allow
+service-oriented approaches.
+
+---
+
+# 💡 Core Principles
+
+- **Free and Open-Source**: All components are licensed
+  under [GNU GPL-compatible licenses](https://github.com/CRISalid-esr) and freely available from GitHub.
+- **Cloud-native by design**: All components are continuously built and published as Docker images. You can find them on
+  our [DockerHub organization](https://hub.docker.com/repositories/crisalidesr).
+- **Modular Architecture**: Not every institution needs all components. You can deploy only the ones you need and
+  integrate them with your existing systems for the management of research-related information.
+- **Standards Compatibility**: While CRISalid components are not natively semantic or ontology-driven, the data model
+  is designed to be compatible with the **[CERIF 2](https://github.com/EuroCRIS/CERIF-Core)** standard. This ensures
+  long-term interoperability and facilitates **research information openness**, in line with initiatives such as
+  the [DORA declaration](https://sfdora.org/).
+- **Institutional Integration and Best Practices**: Our approach follows the recommendations outlined in the
+  [OCLC Research Report (2021) on Research Information Management in the United States](https://www.oclc.org/research/publications/2021/oclcresearch-rim-united-states.html),
+  (see the "Recommendations for Institutional Leaders" section). We avoid creating **data silos**: CRISalid is not a
+  standalone tool but a **subsystem** within the broader institutional information architecture. We emphasize
+  **interoperability**, rely on **Persistent Identifiers (PIDs)**, and promote integration with existent systems like
+  people and structure directories and project or publication repositories at local, national and international levels.
+
+---
+
+# 🧩 Main Components
+
+- **CRISalid Bus**  
+  A shared [RabbitMQ](https://www.rabbitmq.com/) message broker used for real-time communication between components.
+
+- **Graph Database**  
+  A [Neo4j](https://neo4j.com/) database that hosts the institutional **Knowledge Graph**, which acts as the **single
+  source of truth** for the entire system.
+
+  Access to Neo4j is **not direct**: it is mediated through:
+    - [`crisalid-ikg`](https://github.com/CRISalid-esr/crisalid-ikg): A FastAPI middleware that maintains and
+      synchronizes the graph.
+    - [`crisalid-apollo`](https://github.com/CRISalid-esr/crisalid-apollo): A GraphQL API gateway exposing the graph to
+      frontend and analytical services.
+
+---
+
+# 🛠️ Deployment Options
+
+This documentation provides two main deployment strategies:
+
+## 🧪 Development & Test Deployment
+
+Use this if you're:
+
+- Working on a specific CRISalid module
+- Testing integration locally
+- Evaluating CRISalid for your institution
+
+We provide:
+
+- Docker Compose examples
+- Manual installation instructions (e.g., for deploying on virtual machines)
+
+→ [Explore Development & Test Deployment](dev/index.qmd)
+
+## 🚀 Production Deployment
+
+For institutional or production-grade deployments.  
+While Kubernetes is the primary target, it is **not required** — you may still use Docker or manual setups if needed.
+
+We provide:
+
+- Shell scripts to generate Kubernetes manifests
+- Manual installation instructions for production environments
+
+→ [Explore Production Deployment](prod/index.qmd)
+
+---
+
+# 📚 Documentation Structure
+
+The documentation is organized as follows:
+
+- **System Overview**: Understand CRISalid's components and how they interact.
+- **Development & Test Deployment**: Step-by-step guides to run CRISalid locally.
+- **Production Deployment**: Resources for full-scale deployments.
+- **Technical Requirements**: Infrastructure and dependencies checklist.
+- **Security Considerations**: Best practices for securing your CRISalid deployment.
+
+Use the navigation menu on top to browse.
+
+---
+
+# 🔗 External Resources
+
+- 🌐 [CRISalid Official Website](https://crisalid.org)
+- 🧭 [CRISalid Esup-portail Wiki](https://www.esup-portail.org/wiki/spaces/ESUPCRISalid/overview)
+- 🐳 [CRISalid DockerHub Repositories](https://hub.docker.com/repositories/crisalidesr)
+- 💻 [CRISalid GitHub Organization](https://github.com/CRISalid-esr)
+
+---
+
