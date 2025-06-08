@@ -1,0 +1,70 @@
+project:
+  type: website
+
+website:
+  title: "CRISalid Deployment Documentation"
+  description: "Resources and documentation for deploying CRIS modules built by the CRISalid community"
+  site-url: https://docs.crisalid.org  # Optional, adjust if hosted
+  favicon: assets/favicon.ico          # Optional, place your favicon here
+  page-navigation: true
+
+  navbar:
+    left:
+      - href: index.qmd
+        # home icone
+        text: 🏠 Home
+      - text: 🗺️ Overview
+        menu:
+          - href: map/index.qmd
+            text: System Overview
+          - href: map/components.qmd
+            text: Identify Relevant Components
+      - text: 🧪 Development
+        menu:
+          - href: dev/index.qmd
+            text: Introduction
+          - href: dev/docker-compose.qmd
+            text: Docker Compose for Dev/Test
+          - href: dev/manual_installation.qmd
+            text: Manual Installation
+      - text: 🚀 Production
+        menu:
+          - href: prod/index.qmd
+            text: Introduction
+          - href: prod/helm_charts.qmd
+            text: Kubernetes deployment
+          - href: prod/manual_installation.qmd
+            text: Manual Installation
+      - text: ⚙️ Requirements
+        menu:
+          - href: requirements/index.qmd
+            text: Required Infrastructure and Dependencies
+          # Security considerations
+      - text: 🔒 Security
+        menu:
+          - href: security/index.qmd
+            text: Security Considerations
+
+
+    right:
+      - text: 🌐 Website
+        href: https://crisalid.org/
+      - text: 🧭 Wiki
+        href: https://www.esup-portail.org/wiki/spaces/ESUPCRISalid/overview
+      - text: 🐳 DockerHub
+        href: https://hub.docker.com/repositories/crisalidesr
+      - text: GitHub
+        icon: file-code
+        href: https://github.com/orgs/CRISalid-esr/repositories
+
+format:
+  html:
+    theme: default
+    highlight: tango
+    css: index.css
+    code-fold: true
+    toc: true
+    toc-title: Table of Contents
+    toc-location: left
+    toc-expand: true
+    smooth-scroll: true
