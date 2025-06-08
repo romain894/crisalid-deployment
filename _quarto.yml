@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "CRISalid Deployment Documentation"
@@ -11,7 +12,6 @@ website:
   navbar:
     left:
       - href: index.qmd
-        # home icone
         text: 🏠 Home
       - text: 🗺️ Overview
         menu:
