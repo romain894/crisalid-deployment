@@ -13,3 +13,6 @@ include:
   - path: ./harvester/harvester.yaml
     env_file: ./harvester/.env
     project_directory: ./harvester
+  - path: ./ikg/ikg.yaml
+    env_file: ./ikg/.env
+    project_directory: ./ikg
