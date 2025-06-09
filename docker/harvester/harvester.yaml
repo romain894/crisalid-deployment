@@ -1,0 +1,66 @@
+services:
+  redis:
+    image: redis:7
+    container_name: harvester-redis
+    expose:
+      - 6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    profiles:
+      - harvester
+  harvester-db:
+    image: postgres:16
+    container_name: harvester-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${HARVESTER_DB_USER}
+      POSTGRES_PASSWORD: ${HARVESTER_DB_PASSWORD}
+      POSTGRES_DB: ${HARVESTER_DB_NAME}
+    expose:
+      - 5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready  -d ${HARVESTER_DB_NAME} -U ${HARVESTER_DB_USER}" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    profiles:
+      - harvester
+  harvester:
+    image: crisalidesr/svp-harvester:v0.21-dev
+    container_name: harvester
+    ports:
+      - 8000:8000
+    environment:
+      - APP_ENV=DEV
+      - API_HOST=http://localhost:8000
+      - API_PREFIX=/api
+      - API_VERSION=v1
+      - DB_HOST=harvester-db
+      - DB_PORT=5432
+      - DB_NAME=${HARVESTER_DB_NAME}
+      - DB_USER=${HARVESTER_DB_USER}
+      - DB_PASSWORD=${HARVESTER_DB_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+      - AMQP_ENABLED=true
+      - AMQP_HOST=crisalid-bus
+      - AMQP_PORT=${CRISALID_BUS_AMQP_PORT}
+      - AMQP_USER=${CRISALID_BUS_USER}
+      - AMQP_PASSWORD=${CRISALID_BUS_PASSWORD}
+      - SCANR_ES_HOST=${SCANR_ES_HOST}
+      - SCANR_ES_USER=${SCANR_ES_USER}
+      - SCANR_ES_PASSWORD=${SCANR_ES_PASSWORD}
+    depends_on:
+      crisalid-bus:
+        condition: service_healthy
+      harvester-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    profiles:
+      - harvester

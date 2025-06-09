@@ -1,0 +1,29 @@
+services:
+  neo4j:
+    image: neo4j:5-community
+    ports:
+      - "${NEO4J_HTTP_PORT}:7474"
+      - "${NEO4J_BOLT_PORT}:7687"
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+      - ./import:/import
+      - ./plugins:/plugins
+      - ./backups:/backups
+    environment:
+      - NEO4J_AUTH=${NEO4J_AUTH}
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_server_memory_heap_initial__size=${NEO4J_HEAP_INITIAL}
+      - NEO4J_server_memory_heap_max__size=${NEO4J_HEAP_MAX}
+      - NEO4J_server_memory_pagecache_size=${NEO4J_PAGECACHE_SIZE}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:7474"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    profiles:
+      - neo4j
+

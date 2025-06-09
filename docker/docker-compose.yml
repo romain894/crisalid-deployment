@@ -1,0 +1,15 @@
+name: crisalid
+
+include:
+  - path: ./neo4j/neo4j.yaml
+    env_file: ./neo4j/.env
+    project_directory: ./neo4j
+  - path: ./apollo/apollo.yaml
+    env_file: ./apollo/.env
+    project_directory: ./apollo
+  - path: ./crisalid-bus/crisalid-bus.yaml
+    env_file: ./crisalid-bus/.env
+    project_directory: ./crisalid-bus
+  - path: ./harvester/harvester.yaml
+    env_file: ./harvester/.env
+    project_directory: ./harvester
