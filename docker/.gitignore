@@ -1,5 +1,5 @@
 .env
-neo4j/**
-apollo/**
-crisalid-bus/**
-harvester/**
+neo4j/*/
+apollo/*/
+crisalid-bus/*/
+harvester/*/
