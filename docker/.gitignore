@@ -3,3 +3,6 @@ neo4j/*/
 apollo/*/
 crisalid-bus/*/
 harvester/*/
+cdb/dags/*
+cdb/logs/*
+cdb/data/*
