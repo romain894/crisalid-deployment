@@ -85,7 +85,7 @@ x-airflow-common:
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
-    cdb-redis:
+    redis:
       condition: service_healthy
     postgres:
       condition: service_healthy
@@ -106,7 +106,7 @@ services:
       start_period: 5s
     restart: always
 
-  cdb-redis:
+  redis:
     # Redis is limited to 7.2-bookworm due to licencing change
     # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
     image: redis:7.2-bookworm
@@ -122,7 +122,23 @@ services:
     profiles:
       - cdb
     volumes:
-      - cdb-redis-db-volume:/data
+      - redis-db-volume:/data
+
+  data-versioning-redis:
+    image: redis:7.2-bookworm
+    expose:
+      - 6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 30s
+      retries: 50
+      start_period: 30s
+    restart: always
+    profiles:
+      - cdb
+    volumes:
+      - data-versioning-redis-volume:/data
 
   airflow-apiserver:
     <<: *airflow-common
@@ -193,6 +209,10 @@ services:
       <<: *airflow-common-depends-on
       airflow-apiserver:
         condition: service_healthy
+      # CRISalid : add this as our dags are using Redis
+      data-versioning-redis:
+        condition: service_healthy
+
     profiles:
       - cdb
 
@@ -342,4 +362,5 @@ services:
 
 volumes:
   postgres-db-volume:
-  cdb-redis-db-volume:
+  redis-db-volume:
+  data-versioning-redis-volume:

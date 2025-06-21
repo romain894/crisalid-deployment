@@ -43,8 +43,12 @@ if [ -f "$TEMPLATE_ENV" ]; then
 
   export AMQP_USER="$CRISALID_BUS_USER"
   export AMQP_PASSWORD="$CRISALID_BUS_PASSWORD"
-  export CDB_REDIS_HOST=localhost
-  export CDB_REDIS_PASSWORD=redispass
+  export AMQP_HOST="crisalid-bus"
+  export AMQP_PORT="$CRISALID_BUS_AMQP_PORT"
+  export CDB_REDIS_HOST=data-versioning-redis
+  export CDB_REDIS_PORT=6379
+  #  as we reuse airflow-redis, we need to use a different database number
+  export CDB_REDIS_DB=0
   export RESTART_TRIGGER="$(date +%s)"
 
   # Required variables
