@@ -2,6 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://docs.crisalid.org/index.html</loc>
-    <lastmod>2025-06-08T16:38:48.843Z</lastmod>
+    <lastmod>2025-06-11T07:44:56.157Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.crisalid.org/dev/docker-compose.html</loc>
+    <lastmod>2025-06-22T06:39:40.038Z</lastmod>
   </url>
 </urlset>
