@@ -26,7 +26,7 @@ fi
 
 # 2. Prepare Airflow directory structure
 echo "Preparing Airflow directories"
-mkdir -p "$CDB_DIR/logs" "$CDB_DIR/plugins" "$CDB_DIR/config"
+mkdir -p "$CDB_DIR/logs" "$CDB_DIR/plugins" "$CDB_DIR/config" "$CDB_DIR/data"
 rm -rf "$DAGS_DIR"
 git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$DAGS_DIR"
 # delete .github, tests, test_utils
@@ -57,8 +57,8 @@ if [ -f "$TEMPLATE_ENV" ]; then
   : "${LDAP_BIND_PASSWORD:?Missing LDAP_BIND_PASSWORD in environment}"
 
   # Optional paths
-  export PEOPLE_SPREADSHEET_PATH="/data/people.xlsx"
-  export STRUCTURE_SPREADSHEET_PATH="/data/structures.xlsx"
+  export PEOPLE_SPREADSHEET_PATH="/opt/airflow/data/people.csv"
+  export STRUCTURE_SPREADSHEET_PATH="/opt/airflow/data/structures.csv"
   export YAML_EMPLOYEE_TYPE_PATH="/config/employee_types.yaml"
 
   envsubst < "$TEMPLATE_ENV" > "$FINAL_ENV"
