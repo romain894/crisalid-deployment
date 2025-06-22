@@ -241,11 +241,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#preparation-steps" id="toc-preparation-steps" class="nav-link" data-scroll-target="#preparation-steps">🧰 Preparation Steps</a>
   <ul class="collapse">
   <li><a href="#env-files" id="toc-env-files" class="nav-link" data-scroll-target="#env-files">1. 🧾 <code>.env</code> Files</a></li>
-  <li><a href="#configure_crisalid_bus.sh" id="toc-configure_crisalid_bus.sh" class="nav-link" data-scroll-target="#configure_crisalid_bus.sh">2. 🔧 <code>configure_crisalid_bus.sh</code></a></li>
-  <li><a href="#configure_cdb.sh" id="toc-configure_cdb.sh" class="nav-link" data-scroll-target="#configure_cdb.sh">3. 🔧 <code>configure_cdb.sh</code></a></li>
+  <li><a href="#configure-crisalid-bus" id="toc-configure-crisalid-bus" class="nav-link" data-scroll-target="#configure-crisalid-bus">2. 🔧 Configure CRISalid Bus</a></li>
+  <li><a href="#configure-crisalid-directory-bridge-cdb" id="toc-configure-crisalid-directory-bridge-cdb" class="nav-link" data-scroll-target="#configure-crisalid-directory-bridge-cdb">3. 🔧 Configure CRISalid Directory Bridge (CDB)</a></li>
   </ul></li>
   <li><a href="#communication-with-host-machine" id="toc-communication-with-host-machine" class="nav-link" data-scroll-target="#communication-with-host-machine">🔌 Communication with Host Machine</a></li>
   <li><a href="#resetting-containers" id="toc-resetting-containers" class="nav-link" data-scroll-target="#resetting-containers">♻️ Resetting Containers</a></li>
+  <li><a href="#starting-the-services" id="toc-starting-the-services" class="nav-link" data-scroll-target="#starting-the-services">🚀 Starting the Services</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">✅ Next Steps</a></li>
   </ul>
 </nav>
@@ -340,13 +341,13 @@ LDAP_BIND_DN=
 LDAP_BIND_PASSWORD=</code></pre>
 </blockquote>
 </section>
-<section id="configure_crisalid_bus.sh" class="level3">
-<h3 class="anchored" data-anchor-id="configure_crisalid_bus.sh">2. 🔧 <code>configure_crisalid_bus.sh</code></h3>
+<section id="configure-crisalid-bus" class="level3">
+<h3 class="anchored" data-anchor-id="configure-crisalid-bus">2. 🔧 Configure CRISalid Bus</h3>
 <p>This script reads the <code>.env</code> values and generates the RabbitMQ <code>definitions.json</code> file (exchanges, queues, admin user, etc.).</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./docker/configure_crisalid_bus.sh</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="configure_cdb.sh" class="level3">
-<h3 class="anchored" data-anchor-id="configure_cdb.sh">3. 🔧 <code>configure_cdb.sh</code></h3>
+<section id="configure-crisalid-directory-bridge-cdb" class="level3">
+<h3 class="anchored" data-anchor-id="configure-crisalid-directory-bridge-cdb">3. 🔧 Configure CRISalid Directory Bridge (CDB)</h3>
 <p>This script clones the DAGs and runs the Airflow initialization:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./docker/configure_cdb.sh</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>ℹ️ In dev, Airflow GUI admin credentials are set to <code>admin:admin</code>.</p>
@@ -385,13 +386,22 @@ LDAP_BIND_PASSWORD=</code></pre>
 <div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">--profile</span> cdb down <span class="at">--volumes</span> <span class="at">--rmi</span> all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <hr>
 </section>
+<section id="starting-the-services" class="level2">
+<h2 class="anchored" data-anchor-id="starting-the-services">🚀 Starting the Services</h2>
+<p>To start the services, run:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">--profile</span> neo4j <span class="at">--profile</span> apollo <span class="at">--profile</span> crisalid-bus <span class="at">--profile</span> harvester <span class="at">--profile</span> ikg <span class="at">--profile</span> cdb up</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This command will start the selected components in the background. You can add or remove profiles as needed.</p>
+</section>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">✅ Next Steps</h2>
 <p>Once your services are up, follow the component-specific instructions in each section of the documentation. You can now:</p>
 <ul>
-<li>Explore APIs via Apollo GraphQL</li>
-<li>Monitor messages in the RabbitMQ UI</li>
-<li>Start connecting other CRISalid modules</li>
+<li>Access the CRISalid Directory Bridge (CDB) UI at <a href="http://localhost:8080">http://localhost:8080</a> (Airflow) and trigger DAGs to import structures and people</li>
+<li>Access the Neo4j UI at <a href="http://localhost:7474">http://localhost:7474</a> and explore the graph database</li>
+<li>Access the RabbitMQ UI at <a href="http://localhost:15672">http://localhost:15672</a> with credentials from <code>docker/.env</code> and monitor messages</li>
+<li>Access SVP Harvester at <a href="http://localhost:8000">http://localhost:8000</a> to monitor publication harvesting</li>
+<li>Access the Apollo GraphQL UI at <a href="http://localhost:4000/graphql">http://localhost:4000/graphql</a> to explore the API through Apollo GUI</li>
+<li>Start connecting other CRISalid modules from the host machine</li>
 </ul>
 <p>🧭 Back to <a href="index.qmd">Development Index</a></p>
 
