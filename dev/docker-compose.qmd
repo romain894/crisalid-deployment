@@ -1,0 +1,146 @@
+---
+title: "Docker Compose for Dev/Test"
+format:
+  html:
+    toc: true
+    toc-location: left
+---
+
+> ⚠️ **Warning**: Do not deploy this setup to production. This configuration is meant solely for **local development and
+testing**.
+
+> 🛡️ **Ensure your firewall is enabled** on the machine running this setup (e.g., `ufw` on Linux). Running this
+> deployment without a firewall can lead to **data leaks** or **insecure access** to internal institutional
+> directories (
+> especially if LDAP is enabled).
+
+---
+
+## 🔍 Choosing the Components
+
+Before you start, review the components available in [map/components.qmd](../map/components.qmd) and decide which ones
+you need.
+
+The main Compose file ([docker/docker-compose.yaml](../../docker/docker-compose.yaml)) is modular. It uses the `include`
+directive and **profiles** to enable only selected components.
+
+<details><summary>Main docker-compose.yaml</summary>
+```yaml
+{{< include "../docker/docker-compose.yaml" >}}
+```
+</details>
+
+For example:
+
+```bash
+docker compose \
+  --profile neo4j \
+  --profile apollo \
+  --profile crisalid-bus \
+  --profile harvester \
+  --profile ikg \
+  up
+```
+
+---
+
+## 🧰 Preparation Steps
+
+### 1. 🧾 `.env` Files
+
+Each directory under `docker/` (e.g. `apollo`, `crisalid-bus`, `ikg`, `neo4j`, `cdb`, `harvester`) has its own
+`.env.sample` file.
+
+* Copy each `.env.sample` to `.env`
+* Fill in appropriate values (hostnames, ports, secrets, etc.)
+* The main `docker/.env.sample` includes values used by multiple components (like RabbitMQ or Neo4j credentials)
+
+> If you plan to connect the CRISalid Directory Bridge (`cdb`) to your institutional LDAP, make sure to set:
+>
+> ```env
+> LDAP_HOST=
+> LDAP_BIND_DN=
+> LDAP_BIND_PASSWORD=
+> ```
+
+### 2. 🔧 `configure_crisalid_bus.sh`
+
+This script reads the `.env` values and generates the RabbitMQ `definitions.json` file (exchanges, queues, admin user,
+etc.).
+
+```bash
+./docker/configure_crisalid_bus.sh
+```
+
+### 3. 🔧 `configure_cdb.sh`
+
+This script clones the DAGs and runs the Airflow initialization:
+
+```bash
+./docker/configure_cdb.sh
+```
+
+ℹ️ In dev, Airflow GUI admin credentials are set to `admin:admin`.
+
+After running the script, if you intend to use the **CSV mode** for structures and people (instead of LDAP), place your
+data files in:
+
+```
+docker/cdb/data/
+├── structure.csv
+└── people.csv
+```
+
+Sample CSVs:
+
+* [`docker/cdb/dags/data`](../../docker/cdb/dags/data)
+
+Full documentation (in French):
+
+* [Laboratories](https://www.esup-portail.org/wiki/spaces/ESUPCRISalid/pages/1478328327/Import+des+donn%C3%A9es+structures)
+* [Researchers](https://www.esup-portail.org/wiki/spaces/ESUPCRISalid/pages/1478328329/Import+des+donn%C3%A9es+chercheurs)
+
+---
+
+## 🔌 Communication with Host Machine
+
+If you want to connect external tools (on your host) to the containers, open the necessary ports.
+
+For example, to expose RabbitMQ's AMQP port, edit `docker/crisalid-bus/crisalid-bus.yaml` and uncomment the
+2nd `ports` line:
+
+```yaml
+ports:
+  - "${CRISALID_BUS_HTTP_PORT}:15672"
+  # - "${CRISALID_BUS_AMQP_PORT}:5672"
+expose:
+  - "${CRISALID_BUS_AMQP_PORT}"
+```
+
+---
+
+## ♻️ Resetting Containers
+
+To stop and delete containers + volumes for one profile:
+
+```bash
+docker compose --profile cdb down --volumes
+```
+
+To also delete images:
+
+```bash
+docker compose --profile cdb down --volumes --rmi all
+```
+
+---
+
+## ✅ Next Steps
+
+Once your services are up, follow the component-specific instructions in each section of the documentation. You can now:
+
+* Explore APIs via Apollo GraphQL
+* Monitor messages in the RabbitMQ UI
+* Start connecting other CRISalid modules
+
+🧭 Back to [Development Index](index.qmd)

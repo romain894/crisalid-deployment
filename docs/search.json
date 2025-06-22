@@ -19,5 +19,47 @@
     "title": "Welcome to CRISalid Deployment Documentation",
     "section": "🚀 Production Deployment",
     "text": "🚀 Production Deployment\nFor institutional or production-grade deployments.\nWhile Kubernetes is the primary target, it is not required — you may still use Docker or manual setups if needed.\nWe provide:\n\nShell scripts to generate Kubernetes manifests\nManual installation instructions for production environments\n\n→ Explore Production Deployment"
+  },
+  {
+    "objectID": "dev/docker-compose.html",
+    "href": "dev/docker-compose.html",
+    "title": "Docker Compose for Dev/Test",
+    "section": "",
+    "text": "⚠️ Warning: Do not deploy this setup to production. This configuration is meant solely for local development and testing."
+  },
+  {
+    "objectID": "dev/docker-compose.html#choosing-the-components",
+    "href": "dev/docker-compose.html#choosing-the-components",
+    "title": "Docker Compose for Dev/Test",
+    "section": "🔍 Choosing the Components",
+    "text": "🔍 Choosing the Components\nBefore you start, review the components available in map/components.qmd and decide which ones you need.\nThe main Compose file (docker/docker-compose.yaml) is modular. It uses the include directive and profiles to enable only selected components.\n\n\nMain docker-compose.yaml\n\nname: crisalid\n\ninclude:\n  - path: ./neo4j/neo4j.yaml\n    env_file: ./neo4j/.env\n    project_directory: ./neo4j\n  - path: ./apollo/apollo.yaml\n    env_file: ./apollo/.env\n    project_directory: ./apollo\n  - path: ./crisalid-bus/crisalid-bus.yaml\n    env_file: ./crisalid-bus/.env\n    project_directory: ./crisalid-bus\n  - path: ./harvester/harvester.yaml\n    env_file: ./harvester/.env\n    project_directory: ./harvester\n  - path: ./ikg/ikg.yaml\n    env_file: ./ikg/.env\n    project_directory: ./ikg\n  - path: ./cdb/cdb.yaml\n    env_file: ./cdb/.env\n    project_directory: ./cdb\n\nFor example:\ndocker compose \\\n  --profile neo4j \\\n  --profile apollo \\\n  --profile crisalid-bus \\\n  --profile harvester \\\n  --profile ikg \\\n  up"
+  },
+  {
+    "objectID": "dev/docker-compose.html#preparation-steps",
+    "href": "dev/docker-compose.html#preparation-steps",
+    "title": "Docker Compose for Dev/Test",
+    "section": "🧰 Preparation Steps",
+    "text": "🧰 Preparation Steps\n\n1. 🧾 .env Files\nEach directory under docker/ (e.g. apollo, crisalid-bus, ikg, neo4j, cdb, harvester) has its own .env.sample file.\n\nCopy each .env.sample to .env\nFill in appropriate values (hostnames, ports, secrets, etc.)\nThe main docker/.env.sample includes values used by multiple components (like RabbitMQ or Neo4j credentials)\n\n\nIf you plan to connect the CRISalid Directory Bridge (cdb) to your institutional LDAP, make sure to set:\nLDAP_HOST=\nLDAP_BIND_DN=\nLDAP_BIND_PASSWORD=\n\n\n\n2. 🔧 configure_crisalid_bus.sh\nThis script reads the .env values and generates the RabbitMQ definitions.json file (exchanges, queues, admin user, etc.).\n./docker/configure_crisalid_bus.sh\n\n\n3. 🔧 configure_cdb.sh\nThis script clones the DAGs and runs the Airflow initialization:\n./docker/configure_cdb.sh\nℹ️ In dev, Airflow GUI admin credentials are set to admin:admin.\nAfter running the script, if you intend to use the CSV mode for structures and people (instead of LDAP), place your data files in:\ndocker/cdb/data/\n├── structure.csv\n└── people.csv\nSample CSVs:\n\ndocker/cdb/dags/data\n\nFull documentation (in French):\n\nLaboratories\nResearchers"
+  },
+  {
+    "objectID": "dev/docker-compose.html#communication-with-host-machine",
+    "href": "dev/docker-compose.html#communication-with-host-machine",
+    "title": "Docker Compose for Dev/Test",
+    "section": "🔌 Communication with Host Machine",
+    "text": "🔌 Communication with Host Machine\nIf you want to connect external tools (on your host) to the containers, open the necessary ports.\nFor example, to expose RabbitMQ’s AMQP port, edit docker/crisalid-bus/crisalid-bus.yaml and uncomment the 2nd ports line:\nports:\n  - \"${CRISALID_BUS_HTTP_PORT}:15672\"\n  # - \"${CRISALID_BUS_AMQP_PORT}:5672\"\nexpose:\n  - \"${CRISALID_BUS_AMQP_PORT}\""
+  },
+  {
+    "objectID": "dev/docker-compose.html#resetting-containers",
+    "href": "dev/docker-compose.html#resetting-containers",
+    "title": "Docker Compose for Dev/Test",
+    "section": "♻️ Resetting Containers",
+    "text": "♻️ Resetting Containers\nTo stop and delete containers + volumes for one profile:\ndocker compose --profile cdb down --volumes\nTo also delete images:\ndocker compose --profile cdb down --volumes --rmi all"
+  },
+  {
+    "objectID": "dev/docker-compose.html#next-steps",
+    "href": "dev/docker-compose.html#next-steps",
+    "title": "Docker Compose for Dev/Test",
+    "section": "✅ Next Steps",
+    "text": "✅ Next Steps\nOnce your services are up, follow the component-specific instructions in each section of the documentation. You can now:\n\nExplore APIs via Apollo GraphQL\nMonitor messages in the RabbitMQ UI\nStart connecting other CRISalid modules\n\n🧭 Back to Development Index"
   }
 ]

@@ -1,6 +1,12 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - "*.qmd"
+    - "!docker/"
+
+resources:
+  - docker/**/*.yaml
 
 website:
   title: "CRISalid Deployment Documentation"
