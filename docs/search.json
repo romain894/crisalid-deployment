@@ -39,7 +39,7 @@
     "href": "dev/docker-compose.html#preparation-steps",
     "title": "Docker Compose for Dev/Test",
     "section": "🧰 Preparation Steps",
-    "text": "🧰 Preparation Steps\n\n1. 🧾 .env Files\nEach directory under docker/ (e.g. apollo, crisalid-bus, ikg, neo4j, cdb, harvester) has its own .env.sample file.\n\nCopy each .env.sample to .env\nFill in appropriate values (hostnames, ports, secrets, etc.)\nThe main docker/.env.sample includes values used by multiple components (like RabbitMQ or Neo4j credentials)\n\n\nIf you plan to connect the CRISalid Directory Bridge (cdb) to your institutional LDAP, make sure to set:\nLDAP_HOST=\nLDAP_BIND_DN=\nLDAP_BIND_PASSWORD=\n\n\n\n2. 🔧 configure_crisalid_bus.sh\nThis script reads the .env values and generates the RabbitMQ definitions.json file (exchanges, queues, admin user, etc.).\n./docker/configure_crisalid_bus.sh\n\n\n3. 🔧 configure_cdb.sh\nThis script clones the DAGs and runs the Airflow initialization:\n./docker/configure_cdb.sh\nℹ️ In dev, Airflow GUI admin credentials are set to admin:admin.\nAfter running the script, if you intend to use the CSV mode for structures and people (instead of LDAP), place your data files in:\ndocker/cdb/data/\n├── structure.csv\n└── people.csv\nSample CSVs:\n\ndocker/cdb/dags/data\n\nFull documentation (in French):\n\nLaboratories\nResearchers"
+    "text": "🧰 Preparation Steps\n\n1. 🧾 .env Files\nEach directory under docker/ (e.g. apollo, crisalid-bus, ikg, neo4j, cdb, harvester) has its own .env.sample file.\n\nCopy each .env.sample to .env\nFill in appropriate values (hostnames, ports, secrets, etc.)\nThe main docker/.env.sample includes values used by multiple components (like RabbitMQ or Neo4j credentials)\n\n\nIf you plan to connect the CRISalid Directory Bridge (cdb) to your institutional LDAP, make sure to set:\nLDAP_HOST=\nLDAP_BIND_DN=\nLDAP_BIND_PASSWORD=\n\n\n\n2. 🔧 Configure CRISalid Bus\nThis script reads the .env values and generates the RabbitMQ definitions.json file (exchanges, queues, admin user, etc.).\n./docker/configure_crisalid_bus.sh\n\n\n3. 🔧 Configure CRISalid Directory Bridge (CDB)\nThis script clones the DAGs and runs the Airflow initialization:\n./docker/configure_cdb.sh\nℹ️ In dev, Airflow GUI admin credentials are set to admin:admin.\nAfter running the script, if you intend to use the CSV mode for structures and people (instead of LDAP), place your data files in:\ndocker/cdb/data/\n├── structure.csv\n└── people.csv\nSample CSVs:\n\ndocker/cdb/dags/data\n\nFull documentation (in French):\n\nLaboratories\nResearchers"
   },
   {
     "objectID": "dev/docker-compose.html#communication-with-host-machine",
@@ -56,10 +56,17 @@
     "text": "♻️ Resetting Containers\nTo stop and delete containers + volumes for one profile:\ndocker compose --profile cdb down --volumes\nTo also delete images:\ndocker compose --profile cdb down --volumes --rmi all"
   },
   {
+    "objectID": "dev/docker-compose.html#starting-the-services",
+    "href": "dev/docker-compose.html#starting-the-services",
+    "title": "Docker Compose for Dev/Test",
+    "section": "🚀 Starting the Services",
+    "text": "🚀 Starting the Services\nTo start the services, run:\ndocker compose --profile neo4j --profile apollo --profile crisalid-bus --profile harvester --profile ikg --profile cdb up\nThis command will start the selected components in the background. You can add or remove profiles as needed."
+  },
+  {
     "objectID": "dev/docker-compose.html#next-steps",
     "href": "dev/docker-compose.html#next-steps",
     "title": "Docker Compose for Dev/Test",
     "section": "✅ Next Steps",
-    "text": "✅ Next Steps\nOnce your services are up, follow the component-specific instructions in each section of the documentation. You can now:\n\nExplore APIs via Apollo GraphQL\nMonitor messages in the RabbitMQ UI\nStart connecting other CRISalid modules\n\n🧭 Back to Development Index"
+    "text": "✅ Next Steps\nOnce your services are up, follow the component-specific instructions in each section of the documentation. You can now:\n\nAccess the CRISalid Directory Bridge (CDB) UI at http://localhost:8080 (Airflow) and trigger DAGs to import structures and people\nAccess the Neo4j UI at http://localhost:7474 and explore the graph database\nAccess the RabbitMQ UI at http://localhost:15672 with credentials from docker/.env and monitor messages\nAccess SVP Harvester at http://localhost:8000 to monitor publication harvesting\nAccess the Apollo GraphQL UI at http://localhost:4000/graphql to explore the API through Apollo GUI\nStart connecting other CRISalid modules from the host machine\n\n🧭 Back to Development Index"
   }
 ]

@@ -63,7 +63,7 @@ Each directory under `docker/` (e.g. `apollo`, `crisalid-bus`, `ikg`, `neo4j`, `
 > LDAP_BIND_PASSWORD=
 > ```
 
-### 2. 🔧 `configure_crisalid_bus.sh`
+### 2. 🔧 Configure CRISalid Bus
 
 This script reads the `.env` values and generates the RabbitMQ `definitions.json` file (exchanges, queues, admin user,
 etc.).
@@ -72,7 +72,7 @@ etc.).
 ./docker/configure_crisalid_bus.sh
 ```
 
-### 3. 🔧 `configure_cdb.sh`
+### 3. 🔧 Configure CRISalid Directory Bridge (CDB)
 
 This script clones the DAGs and runs the Airflow initialization:
 
@@ -135,12 +135,29 @@ docker compose --profile cdb down --volumes --rmi all
 
 ---
 
+## 🚀 Starting the Services
+
+To start the services, run:
+
+```bash
+docker compose --profile neo4j --profile apollo --profile crisalid-bus --profile harvester --profile ikg --profile cdb up
+```
+
+This command will start the selected components in the background. You can add or remove profiles as needed.
+
 ## ✅ Next Steps
 
 Once your services are up, follow the component-specific instructions in each section of the documentation. You can now:
 
-* Explore APIs via Apollo GraphQL
-* Monitor messages in the RabbitMQ UI
-* Start connecting other CRISalid modules
+* Access the CRISalid Directory Bridge (CDB) UI at
+  [http://localhost:8080](http://localhost:8080) (Airflow) and trigger DAGs to import structures and people
+* Access the Neo4j UI at [http://localhost:7474](http://localhost:7474) and explore the graph database
+* Access the RabbitMQ UI at [http://localhost:15672](http://localhost:15672) with credentials from `docker/.env` and
+  monitor messages
+* Access SVP Harvester at [http://localhost:8000](http://localhost:8000) to monitor publication harvesting
+* Access the Apollo GraphQL UI at [http://localhost:4000/graphql](http://localhost:4000/graphql) to explore the API
+  through
+  Apollo GUI
+* Start connecting other CRISalid modules from the host machine
 
 🧭 Back to [Development Index](index.qmd)
