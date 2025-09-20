@@ -108,6 +108,8 @@ services:
     restart: always
     networks:
       - cdb-network
+    profiles:
+      - cdb
 
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
