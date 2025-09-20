@@ -11,7 +11,9 @@ services:
       - ./plugins:/plugins
       - ./backups:/backups
     environment:
-      - NEO4J_AUTH=${NEO4J_AUTH}
+      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
+      # use the following line instead to disable authentication
+      # - NEO4J_AUTH=none
       - NEO4J_apoc_export_file_enabled=true
       - NEO4J_apoc_import_file_enabled=true
       - NEO4J_apoc_import_file_use__neo4j__config=true
