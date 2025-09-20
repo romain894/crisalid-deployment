@@ -21,6 +21,9 @@ services:
     container_name: crisalid-ikg
     ports:
       - 8001:8000
+    # or expose internally instead of publishing to host
+    #    expose:
+    #      - "8000"
     environment:
       - APP_ENV=DEV
       - API_PREFIX=/api
